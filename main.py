@@ -60,12 +60,29 @@ def kNN_classifier(X_splited: list, y_splited: list, K: range):
         `y_splited`: 标签集被切分后的列表
         `K`: k值范围
     """
+    accuracy_list = []
     for k in K:
         accuracy = np.mean([evaluate_accuracy(k, i, X_splited, y_splited) for i in range(len(X_splited))])
         print(f"K = {k}, accuracy = {accuracy}")
+        accuracy_list.append(accuracy)
+    
+    return accuracy_list
+        
+def draw_accuracy(accuracys: list, k: range):
+    """
+    绘制准确度曲线。
+    """
+    import matplotlib.pyplot as plt
+
+    plt.plot(k, accuracys)
+    plt.xlabel("K")
+    plt.ylabel("Accuracy")
+    plt.show()
 
 if __name__ == "__main__":
     X, y = fetch_dataset(file_path = DATA_PATH)
     X_splited = split_dataset(X, split_ratio = SPLIT_RATIO)
     y_splited = split_dataset(y, split_ratio = SPLIT_RATIO)
-    kNN_classifier(X_splited, y_splited, K)
+    accuracys = kNN_classifier(X_splited, y_splited, K)
+
+    draw_accuracy(accuracys, K)
